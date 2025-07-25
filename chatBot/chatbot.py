@@ -1127,7 +1127,13 @@ def chat():
         if check == "produs_informații":
             reply = build_service_prompt(categorii_unice)
         elif check == "comandă":
-            print("comandă")
+            mesaj = (
+                "🎉 Mǎ bucur că vrei să plasezi o comandă!<br><br>"
+                "📋 Hai să parcurgem împreună câțiva pași simpli pentru a înregistra comanda cu succes. 🚀<br><br>"
+            )
+
+            mesaj1 = build_service_prompt_2(categorii_unice)
+            reply = mesaj + mesaj1
         elif check == "preferinte":
             prompt_buget = """
             💰 <strong>Haide să alegem un buget potrivit pentru serviciul dorit!</strong><br><br>

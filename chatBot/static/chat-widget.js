@@ -496,6 +496,10 @@
               setTimeout(() => {
                 typingElement.remove();
                 reply(data.message); // Afișează mesajul de bun venit după delay
+                if(data.message.includes("Mǎ bucur că vrei să plasezi o comandă!")){
+                  onboardingStep = 15;
+                  return;
+                }
                 if(data.message.includes("Landing Page One-Page") || data.message.includes("Site Simplu (3–5 pagini)")){
                   onboardingStep = 2;
                 } else if(data.message.includes("Îți pot oferi o gamă variată de servicii IT specializate.")){
