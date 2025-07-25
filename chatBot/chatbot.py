@@ -50,6 +50,7 @@ preferinte["Numar_Telefon"] = ""
 preferinte["Serviciul_Ales"] = ""
 preferinte["Limba_Serviciului"] = ""
 preferinte["Preferintele_Utilizatorului_Cautare"] = ""
+preferinte["Produs_Pentru_Comanda"] = ""
 
 preferinte["Pret_MD"] = ""
 preferinte["Pret_UE"] = ""
@@ -771,8 +772,9 @@ def filtreaza_servicii_dupa_buget(servicii_dict, buget_str):
 
     for nume_serviciu, detalii in servicii_dict.items():
         pret_md = parse_pret(detalii.get("pret_md", "0"))
+        print("pret_md = ", pret_md)
         pret_ue = parse_pret(detalii.get("pret_ue", "0"))
-
+        print("pret_ue = ", pret_ue)
         if pret_md <= buget and pret_ue <= buget:
             rezultate[nume_serviciu] = detalii
 
@@ -814,11 +816,14 @@ def functionalities():
         else:
             if ";" in func:
                 splited_func = func.split(";")
-                print("splited_func = ", splited_func)
+                preferinte["Produs_Pentru_Comanda"] = splited_func
             elif "\n" in func:
                 splited_func = func.split("\n")
+                preferinte["Produs_Pentru_Comanda"] = splited_func
             else:
                 splited_func = ["Pachet : Business Smart" , "Site Complex Multilingv (>5 pagini)" , "Magazin Online (E-commerce)" ]
+                preferinte["Produs_Pentru_Comanda"] = splited_func
+
             mesaj = ""
             for i in splited_func:
                 detalii = extract_info(i)
@@ -879,10 +884,13 @@ def functionalities():
             else:
                 if ";" in func:
                     splited_func = func.split(";")
+                    preferinte["Produs_Pentru_Comanda"] = splited_func
                 elif "\n" in func:
                     splited_func = func.split("\n")
+                    preferinte["Produs_Pentru_Comanda"] = splited_func
                 else:
                     splited_func = ["Pachet : Business Smart" , "Site Complex Multilingv (>5 pagini)" , "Magazin Online (E-commerce)"]
+                    preferinte["Produs_Pentru_Comanda"] = splited_func
 
                 mesaj = ""
                 
@@ -918,10 +926,13 @@ def functionalities():
             
             if ";" in func:
                 splited_func = func.split(";")
+                preferinte["Produs_Pentru_Comanda"] = splited_func
             elif "\n" in func:
                 splited_func = func.split("\n")
+                preferinte["Produs_Pentru_Comanda"] = splited_func
             else:
                 splited_func = ["Pachet : Business Smart" , "Site Complex Multilingv (>5 pagini)" , "Magazin Online (E-commerce)"]
+                preferinte["Produs_Pentru_Comanda"] = splited_func
 
             mesaj = ""
             for i in splited_func:
@@ -993,6 +1004,8 @@ def welcome():
 
             preferinte["Pret_MD"] = pret_md
             preferinte["Pret_UE"] = pret_ue
+            print(preferinte["Pret_MD"])
+            print(preferinte["Pret_UE"])
             pret_reducere = detalii.get("reducere", "N/A")
 
             mesaj = (
@@ -1005,6 +1018,7 @@ def welcome():
                 f"💸 Reducere : <strong>{pret_reducere} MDL</strong><br /><br /><br>"
                 "🔄 Dacă vrei detalii despre un <strong>alt serviciu</strong> , să faci o <strong>comandă</strong> sau <strong>sa alegem după preferințe</strong> scrie-mi te rog! 😊"
             )
+            preferinte["Produs_Pentru_Comanda"] = produs
 
     elif lungime_rezultat > 1:
         reply = genereaza_prompt_produse(rezultat, resp, "RO")
@@ -1040,6 +1054,29 @@ def welcome():
     return jsonify({"message": mesaj})
 
 
+
+@app.route("/produs_intrebare", methods=["POST"])
+def produs_intrebare():
+    data = request.json
+    name = data.get("name", "")
+    interests = data.get("interests", "")
+    message = data.get("message", "")
+    check_response = check_response_comanda(message)
+
+
+    if check_response == "DA":
+        mesaj = (
+            "✅ Serviciul a fost salvat cu succes!<br><br>"
+            "📝 Pentru a continua comanda cât mai rapid, te rog scrie <strong>numele și prenumele</strong> "
+        )
+    else:
+        mesaj = build_service_prompt_2(categorii_unice)
+        return jsonify({"message": mesaj})
+
+
+
+    return jsonify({"message": mesaj})
+
 @app.route("/chat", methods=["POST" , "GET"])
 def chat():
     step = request.args.get('step')
@@ -1050,10 +1087,9 @@ def chat():
     interests = data.get("interests", "")
     message = data.get("message", "")
 
-
-
-
     print("mmmmmm = ", message)
+
+
 
     prompt_verify = (
         f"Ai o listă de servicii valide: {categorii_unice}\n\n"
@@ -1077,8 +1113,7 @@ def chat():
         if lungime_rezultat == 1:
             produs = rezultat[0]['produs']
             print("rezultatul =", produs)
-            detalii = extract_info(produs)
-            
+            detalii = extract_info(produs)            
             if detalii:
                 descriere = detalii.get("descriere", "N/A")
                 beneficii = detalii.get("beneficii", "N/A")
@@ -1086,7 +1121,9 @@ def chat():
                 pret_ue = detalii.get("pret_ue", "N/A")
 
                 preferinte["Pret_MD"] = pret_md
+                print(preferinte["Pret_MD"])
                 preferinte["Pret_UE"] = pret_ue
+                print(preferinte["Pret_UE"])
                 pret_reducere = detalii.get("reducere", "N/A")
 
                 mesaj = (
@@ -1127,13 +1164,21 @@ def chat():
         if check == "produs_informații":
             reply = build_service_prompt(categorii_unice)
         elif check == "comandă":
+
             mesaj = (
                 "🎉 Mǎ bucur că vrei să plasezi o comandă!<br><br>"
                 "📋 Hai să parcurgem împreună câțiva pași simpli pentru a înregistra comanda cu succes. 🚀<br><br>"
             )
 
+            if preferinte["Produs_Pentru_Comanda"] != "":
+                produs = preferinte["Produs_Pentru_Comanda"]
+                mesaj = f"📦 Doriți să plasați o comandă pentru produsul <strong>{produs}</strong>? ✨<br>Răspundeți cu <strong>Da</strong> sau <strong>Nu</strong>."
+                return jsonify({"message": mesaj})
+
+
             mesaj1 = build_service_prompt_2(categorii_unice)
             reply = mesaj + mesaj1
+                
         elif check == "preferinte":
             prompt_buget = """
             💰 <strong>Haide să alegem un buget potrivit pentru serviciul dorit!</strong><br><br>
@@ -1219,6 +1264,63 @@ def check_surname_command_ro(command):
     return "DA" if response1 == "DA" else "NU"
 
 
+@app.route("/selecteaza_produs", methods=["POST"])
+def selecteaza_produs():
+    data = request.get_json()
+    name = data.get("name", "")
+    interests = data.get("interests", "")
+    message = data.get("message", "")
+
+    rezultat = function_check_product(message , categorii_unice, "RO")
+    # preferinte["Serviciul_Ales"] = rezultat[0]['produs']
+    produsele = preferinte["Produs_Pentru_Comanda"]
+
+    print("produsele = ", produsele)
+    print("rezultat = ", rezultat)
+    if rezultat == "NU":
+        lungime_rezultat = 0
+    else:
+        lungime_rezultat = len(rezultat)
+
+    if lungime_rezultat == 1:
+        produs = rezultat[0]['produs']
+        preferinte["Serviciul_Ales"] = produs
+        print("rezultatul =", produs)
+        detalii = extract_info(produs)            
+        pret_md = detalii.get("pret_md", "N/A")
+        pret_ue = detalii.get("pret_ue", "N/A")
+        preferinte["Pret_MD"] = pret_md
+        preferinte["Pret_UE"] = pret_ue
+        preferinte["Produs_Pentru_Comanda"] = produs
+        mesaj = (
+            "✅ Serviciul a fost salvat cu succes!<br><br>"
+            "📝 Pentru a continua comanda cât mai rapid, te rog scrie <strong>numele și prenumele</strong> "
+        )
+
+        return jsonify({"message": mesaj})
+
+    elif lungime_rezultat > 1:
+        reply = genereaza_prompt_produse(rezultat, "OK", "RO")
+        return jsonify({"message": reply})
+    else:
+        prompt = (
+            f"Utilizatorul a scris categoria: '{interests}'.\n\n"
+            "Nu spune niciodată „Salut”, gen toate chestiile introductive, pentru că noi deja ducem o discuție și ne cunoaștem. "
+            "Scrie un mesaj politicos, prietenos și natural, care:\n"
+            "1. Răspunde pe scurt la ceea ce a spus utilizatorul . "
+            "2. Mesajul să fie scurt, cald, empatic și prietenos. "
+            "Nu mai mult de 2-3 propoziții.\n"
+            "Nu folosi ghilimele și nu explica ce faci – scrie doar mesajul final pentru utilizator."
+        )
+
+        messages = [{"role": "system", "content": prompt}]
+        mesaj = ask_with_ai(messages).strip()
+        mesaj +="<br><br>"
+        reply = build_service_prompt_2(produsele)
+        mesaj = mesaj + reply
+
+    return jsonify({"message": mesaj})
+
 @app.route("/comanda", methods=["POST"])
 def comanda():
     data = request.get_json()
@@ -1229,18 +1331,25 @@ def comanda():
     resp = check_response_comanda(message)
     print("resp = ", resp)
 
-
     if resp == "DA":
-        mesaj = (
-            "🎉 Mǎ bucur că vrei să plasezi o comandă!<br><br>"
-            "📋 Hai să parcurgem împreună câțiva pași simpli pentru a înregistra comanda cu succes. 🚀<br><br>"
-        )
+        if preferinte["Produs_Pentru_Comanda"] != "":
+            produse = preferinte["Produs_Pentru_Comanda"]
+            mesaj = "🛍️ Alegeți unul dintre următoarele produse pentru a plasa o comandă: <br>\n\n"
+            for idx, produs in enumerate(produse, 1):
+                mesaj += f"<br> <strong>{produs}</strong>\n"
+            return jsonify({"message": mesaj})
 
-        mesaj1 = build_service_prompt_2(categorii_unice)
-        mesaj = mesaj + mesaj1
+        else:
+            mesaj = (
+                "🎉 Mǎ bucur că vrei să plasezi o comandă!<br><br>"
+                "📋 Hai să parcurgem împreună câțiva pași simpli pentru a înregistra comanda cu succes. 🚀<br><br>"
+            )
 
-        # rezultat = function_check_product(interests , categorii_unice, "RO")
-        # print("rezultat = ", rezultat)
+            mesaj1 = build_service_prompt_2(categorii_unice)
+            mesaj = mesaj + mesaj1
+
+            # rezultat = function_check_product(interests , categorii_unice, "RO")
+            # print("rezultat = ", rezultat)
                 
         return jsonify({"message": mesaj})
     elif resp == "NU":
@@ -1352,8 +1461,8 @@ def afiseaza_produs():
         produs = rezultat[0]['produs']
         print("rezultatul =", produs)
         detalii = extract_info(produs)
+        preferinte["Produs_Pentru_Comanda"] = produs
 
-        
         if detalii:
             descriere = detalii.get("descriere", "N/A")
             beneficii = detalii.get("beneficii", "N/A")
@@ -1490,7 +1599,7 @@ def check_name_surname():
         print("nume_prenume_corect = ", nume_prenume_corect)
         preferinte["Nume_Prenume"] = nume_prenume_corect
         reply = (
-            "😊 Mulțumim! Ai un nume frumos! 💬<br>"
+            "😊 Mulțumim! Ai un nume frumos! 💬<br><br>"
             "📞 Te rugăm să ne lași un <strong>număr de telefon</strong> pentru a putea <strong>inregistra comanda</strong><br><br>"
             "Te rugăm să te asiguri că numărul începe cu <strong>0</strong> sau <strong>+373</strong>. ✅"
         )
@@ -1785,23 +1894,21 @@ def email():
             """
         })
     else:
-        prompt = (
-            f"Utilizatorul a scris : '{message}'.\n\n"
-            "Nu spune niciodată „Salut”, gen toate chestiile introductive, pentru că noi deja ducem o discuție și ne cunoaștem. "
-            "Scrie un mesaj politicos, prietenos și natural, care:\n"
-            "1. Răspunde pe scurt la ceea ce a spus utilizatorul . "
-            "2. Mesajul să fie scurt, cald, empatic și prietenos. "
-            "Nu mai mult de 2-3 propoziții.\n"
-            "Nu folosi ghilimele și nu explica ce faci – scrie doar mesajul final pentru utilizator."
-        )
-        messages = [{"role": "system", "content": prompt}]
-        mesaj = ask_with_ai(messages).strip()
-        mesaj += (
-            "<br><br>😊 <strong>Te rog frumos să introduci o adresă de email validă</strong> ca să putem continua fără probleme. ✨ Mulțumesc din suflet! 💌"
+        # prompt = (
+        #     f"Utilizatorul a scris : '{message}'.\n\n"
+        #     "Nu spune niciodată „Salut”, gen toate chestiile introductive, pentru că noi deja ducem o discuție și ne cunoaștem. "
+        #     "Scrie un mesaj politicos, prietenos și natural, care:\n"
+        #     "1. Răspunde pe scurt la ceea ce a spus utilizatorul . "
+        #     "2. Mesajul să fie scurt, cald, empatic și prietenos. "
+        #     "Nu mai mult de 2-3 propoziții.\n"
+        #     "Nu folosi ghilimele și nu explica ce faci – scrie doar mesajul final pentru utilizator."
+        # )
+        # messages = [{"role": "system", "content": prompt}]
+        # mesaj = ask_with_ai(messages).strip()
+        mesaj = (
+            "😊 <strong>Te rog frumos să introduci o adresă de email validă</strong> ca să putem continua fără probleme. ✨ Mulțumesc din suflet! 💌"
         )
         return jsonify({"message": mesaj})
-
-
 
 def generate_welcome_message(name, interests):
     system_prompt = (
@@ -1824,10 +1931,6 @@ def generate_welcome_message(name, interests):
         max_tokens=150
     )
     return response.choices[0].message.content.strip()
-
-
-
-
 
 def ask_with_ai(messages, temperature=0.9, max_tokens=200):
     response = client.chat.completions.create(
