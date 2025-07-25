@@ -834,6 +834,7 @@ def functionalities():
                     pret_md = detalii.get("pret_md", "N/A")
                     pret_ue = detalii.get("pret_ue", "N/A")
                     pret_reducere = detalii.get("reducere", "N/A")
+                    
 
                     mesaj += (
                         f"✅ Iată toate detaliile despre <strong>{i}</strong> 🧩<br /><br />"
@@ -1007,6 +1008,7 @@ def welcome():
             print(preferinte["Pret_MD"])
             print(preferinte["Pret_UE"])
             pret_reducere = detalii.get("reducere", "N/A")
+            preferinte["reducere"] = pret_reducere
 
             mesaj = (
                 f"✅ Am găsit serviciul tău! Iată toate detaliile despre <strong>{produs}</strong> 🧩<br /><br />"
@@ -1119,12 +1121,16 @@ def chat():
                 beneficii = detalii.get("beneficii", "N/A")
                 pret_md = detalii.get("pret_md", "N/A")
                 pret_ue = detalii.get("pret_ue", "N/A")
+ 
 
                 preferinte["Pret_MD"] = pret_md
                 print(preferinte["Pret_MD"])
                 preferinte["Pret_UE"] = pret_ue
                 print(preferinte["Pret_UE"])
                 pret_reducere = detalii.get("reducere", "N/A")
+                preferinte["reducere"] = pret_reducere
+
+                
 
                 mesaj = (
                     f"✅ Am găsit serviciul tău! Iată toate detaliile despre <strong>{produs}</strong> 🧩<br /><br />"
@@ -1289,6 +1295,8 @@ def selecteaza_produs():
         detalii = extract_info(produs)            
         pret_md = detalii.get("pret_md", "N/A")
         pret_ue = detalii.get("pret_ue", "N/A")
+        pret_reducere = detalii.get("reducere", "N/A")
+        preferinte["reducere"] = pret_reducere
         preferinte["Pret_MD"] = pret_md
         preferinte["Pret_UE"] = pret_ue
         preferinte["Produs_Pentru_Comanda"] = produs
@@ -1405,6 +1413,7 @@ def comanda_inceput():
             preferinte["Pret_MD"] = pret_md
             preferinte["Pret_UE"] = pret_ue
             pret_reducere = detalii.get("reducere", "N/A")
+            preferinte["reducere"] = pret_reducere
 
             mesaj = (
                 f"✅ Iată toate detaliile despre <strong>{produs}</strong> 🧩<br /><br />"
@@ -1473,6 +1482,7 @@ def afiseaza_produs():
 
             preferinte["Serviciul_Ales"] = produs
             pret_reducere = detalii.get("reducere", "N/A")
+            preferinte["reducere"] = pret_reducere
             
             mesaj = (
                 f"✅ Iată toate detaliile despre <strong>{produs}</strong> 🧩<br /><br />"
@@ -1604,20 +1614,20 @@ def check_name_surname():
             "Te rugăm să te asiguri că numărul începe cu <strong>0</strong> sau <strong>+373</strong>. ✅"
         )
     else:
-        prompt_ai = (
-            f"Nu te saluta niciodata pentru ca deja avem o discutie.\n"
-            f"Acționează ca un asistent prietenos și politicos.\n"
-            f"Răspunde la următorul mesaj ca și cum ai fi un agent uman care vrea să ajute clientul.\n"
-            f"Răspunsul trebuie să fie cald, clar și la obiect. "
-            f'Mesajul clientului: "{message}"\n\n'
-            f"Răspuns:"
-        )
+        # prompt_ai = (
+        #     f"Nu te saluta niciodata pentru ca deja avem o discutie.\n"
+        #     f"Acționează ca un asistent prietenos și politicos.\n"
+        #     f"Răspunde la următorul mesaj ca și cum ai fi un agent uman care vrea să ajute clientul.\n"
+        #     f"Răspunsul trebuie să fie cald, clar și la obiect. "
+        #     f'Mesajul clientului: "{message}"\n\n'
+        #     f"Răspuns:"
+        # )
 
-        messages = [{"role": "system", "content": prompt_ai}]
-        reply = ask_with_ai(messages, temperature=0.9 , max_tokens= 150)
+        # messages = [{"role": "system", "content": prompt_ai}]
+        # reply = ask_with_ai(messages, temperature=0.9 , max_tokens= 150)
         
 
-        reply += "<br><br>📞 Introdu, te rog, <strong>doar numele si prenumele</strong> – este foarte important pentru a înregistra comanda. Mulțumim ! 🙏😊"
+        reply = "📞 Introdu, te rog, <strong>doar numele si prenumele</strong> – este foarte important pentru a înregistra comanda. Mulțumim ! 🙏😊"
 
     
     return jsonify({"message": reply})
@@ -1764,6 +1774,10 @@ def email():
             "Authorization": HUBSPOT_TOKEN,
             "Content-Type": "application/json"
         }
+        pret_md = int(preferinte['Pret_MD'].replace(" ", ""))
+        pret_ue = int(preferinte['Pret_UE'].replace(" ", ""))
+        pret_md_reducere = pret_md - int(preferinte["reducere"].replace(" ", ""))
+        pret_ue_reducere = pret_ue - int(preferinte["reducere"].replace(" ", ""))
         # print("preferinte = ", preferinte["Serviciul_Ales"])
         if preferinte["BUDGET"] != "":
             mesaj_telegram = (
@@ -1774,7 +1788,9 @@ def email():
                 f"📞 <b>Telefon:</b> <code>{preferinte['Numar_Telefon']}</code>\n"
                 f"🛠️ <b>Serviciu dorit:</b> <i>{preferinte['Serviciul_Ales']}</i>\n"
                 f"🌐 <b>Limba dorita:</b> <i>{preferinte['Limba_Serviciului']}</i>\n"
-                f"💲 <b>Buget:</b> <i>{preferinte['BUDGET']}</i>\n"
+                f"💲 <b>Pret MD cu reducere:</b> <i>{pret_md_reducere}</i>\n"
+                f"💲 <b>Pret UE cu reducere:</b> <i>{pret_ue_reducere}</i>\n"
+                f"💲 <b>Buget client:</b> <i>{preferinte['BUDGET']}</i>\n"
                 f"💬 <b>Mesaj cu preferintele înregistrare din chat:</b> <i>{preferinte['Preferintele_Utilizatorului_Cautare']}</i>\n"
                 "━━━━━━━━━━━━━━━━━━━━━━\n"
                 "✅ <b>Verifică și confirmă comanda din sistem!</b>\n"
@@ -1792,6 +1808,7 @@ def email():
                         "limba_serviciu": f"{preferinte['Limba_Serviciului']}",
                         "pret_md": f"{int(preferinte['Pret_MD'].replace(" ", ""))}",
                         "pret_ue": f"{int(preferinte['Pret_UE'].replace(" ", ""))}",
+                        "reducere": f"{preferinte['reducere'].replace(" ", "")}",
                         "hs_lead_status" : "NEW",
                         "preferinte_inregistrare": f"{preferinte['Preferintele_Utilizatorului_Cautare']}",
                         # "contract": f"{}"
@@ -1814,6 +1831,7 @@ def email():
                         "limba_serviciu": f"{preferinte['Limba_Serviciului']}",
                         "pret_md": f"{int(preferinte['Pret_MD'].replace(" ", ""))}",
                         "pret_ue": f"{int(preferinte['Pret_UE'].replace(" ", ""))}",
+                        "reducere": f"{preferinte['reducere'].replace(" ", "")}",
                         "hs_lead_status" : "NEW",
                         "preferinte_inregistrare": f"{preferinte['Preferintele_Utilizatorului_Cautare']}",
                     }
@@ -1831,6 +1849,9 @@ def email():
                 f"📧 <b>Email:</b> <i>{valid_emails[0]}</i>\n"
                 f"📞 <b>Telefon:</b> <code>{preferinte['Numar_Telefon']}</code>\n"
                 f"🛠️ <b>Serviciu dorit:</b> <i>{preferinte['Serviciul_Ales']}</i>\n"
+                f"💲 <b>Pret MD cu reducere:</b> <i>{pret_md_reducere}</i>\n"
+                f"💲 <b>Pret UE cu reducere:</b> <i>{pret_ue_reducere}</i>\n"
+                f"💲 <b>Buget client:</b> <i>{preferinte['BUDGET']}</i>\n"
                 "━━━━━━━━━━━━━━━━━━━━━━\n"
                 "✅ <b>Verifică și confirmă comanda din sistem!</b>\n"
             )
@@ -1845,6 +1866,7 @@ def email():
                         "produs": f"{preferinte['Serviciul_Ales']}",
                         "pret_md": f"{int(preferinte['Pret_MD'].replace(" ", ""))}",
                         "pret_ue": f"{int(preferinte['Pret_UE'].replace(" ", ""))}",
+                        "reducere": f"{preferinte['reducere'].replace(" ", "")}",
                         "hs_lead_status" : "NEW",
                     }
                 }
@@ -1863,6 +1885,7 @@ def email():
                         "produs": f"{preferinte['Serviciul_Ales']}",
                         "pret_md": f"{int(preferinte['Pret_MD'].replace(" ", ""))}",
                         "pret_ue": f"{int(preferinte['Pret_UE'].replace(" ", ""))}",
+                        "reducere": f"{preferinte['reducere'].replace(" ", "")}",
                         "hs_lead_status" : "NEW",
                     }
                 }
@@ -1910,6 +1933,8 @@ def email():
         )
         return jsonify({"message": mesaj})
 
+
+
 def generate_welcome_message(name, interests):
     system_prompt = (
         f"Ești un chatbot inteligent, prietenos și util. Evită să repeți saluturi precum „Salut”, „Bine ai venit” sau numele utilizatorului ({name}) în fiecare mesaj. "
@@ -1931,6 +1956,10 @@ def generate_welcome_message(name, interests):
         max_tokens=150
     )
     return response.choices[0].message.content.strip()
+
+
+
+
 
 def ask_with_ai(messages, temperature=0.9, max_tokens=200):
     response = client.chat.completions.create(
