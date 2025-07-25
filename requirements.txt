@@ -1,5 +1,14 @@
 flask
 flask-cors
-openai
-pandas
 openpyxl
+pandas
+python-dotenv
+requests
+beautifulsoup4
+thefuzz
+fuzzywuzzy
+langchain
+chromadb
+openai
+langchain-openai
+langchain-community
