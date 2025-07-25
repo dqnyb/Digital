@@ -249,7 +249,7 @@
             document.getElementById('send-feedback-btn').addEventListener('click', () => {
               const comment = document.getElementById("feedback-comment").value;
           
-              fetch("http://127.0.0.1:5000/feedback", {
+              fetch("https://digital-52rr.onrender.com/feedback", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -299,7 +299,7 @@
             chatMessages.appendChild(typingElement);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            fetch("http://127.0.0.1:5000/start")
+            fetch("https://digital-52rr.onrender.com/start")
               .then(res => res.json())
               .then(data => {
                 setTimeout(() => {
@@ -351,7 +351,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/interests", {
+          fetch("https://digital-52rr.onrender.com/interests", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName })
@@ -402,7 +402,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/criteria", {
+          fetch("https://digital-52rr.onrender.com/criteria", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName , message: message })
@@ -444,7 +444,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/welcome", {
+          fetch("https://digital-52rr.onrender.com/welcome", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests })
@@ -486,7 +486,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/chat", {
+          fetch("https://digital-52rr.onrender.com/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests , message: message })
@@ -530,7 +530,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/budget", {
+          fetch("https://digital-52rr.onrender.com/budget", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests , message: message })
@@ -572,7 +572,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/preference_language", {
+          fetch("https://digital-52rr.onrender.com/preference_language", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests , message: message })
@@ -614,7 +614,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/functionalities", {
+          fetch("https://digital-52rr.onrender.com/functionalities", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests , message: message })
@@ -657,7 +657,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/comanda", {
+          fetch("https://digital-52rr.onrender.com/comanda", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests , message: message })
@@ -701,7 +701,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/ai_mai_comandat", {
+          fetch("https://digital-52rr.onrender.com/ai_mai_comandat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests , message: message })
@@ -741,7 +741,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/check_name_surname", {
+          fetch("https://digital-52rr.onrender.com/check_name_surname", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests , message: message })
@@ -783,7 +783,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/numar_de_telefon", {
+          fetch("https://digital-52rr.onrender.com/numar_de_telefon", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests , message: message })
@@ -823,7 +823,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/afiseaza_produs", {
+          fetch("https://digital-52rr.onrender.com/afiseaza_produs", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests , message: message })
@@ -863,7 +863,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/confirma_produs", {
+          fetch("https://digital-52rr.onrender.com/confirma_produs", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests , message: message })
@@ -905,7 +905,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/email", {
+          fetch("https://digital-52rr.onrender.com/email", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests , message: message })
@@ -948,7 +948,7 @@
           chatMessages.appendChild(typingElement);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         
-          fetch("http://127.0.0.1:5000/comanda_inceput", {
+          fetch("https://digital-52rr.onrender.com/comanda_inceput", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: userName, interests: userInterests , message: message })
@@ -975,7 +975,7 @@
 
 
         // Chat normal
-        fetch("http://127.0.0.1:5000/chat", {
+        fetch("https://digital-52rr.onrender.com/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message })
