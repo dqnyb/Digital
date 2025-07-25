@@ -15,7 +15,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 # 1. Citește CSV-ul
-df = pd.read_csv("digitalgrow.csv")
+df = pd.read_csv("chatBot/digitalgrow.csv")
 df.columns = df.columns.str.strip()
 
 # 2. Creează documente din fiecare rând

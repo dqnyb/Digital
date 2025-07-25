@@ -39,7 +39,7 @@ HUBSPOT_TOKEN = f"Bearer {TOKEN}"
 client = OpenAI(
     api_key=f"{OPENAI_API_KEY}",  # pune aici cheia ta reală!
 )
-df = pd.read_excel('digitalgrow.xlsx')
+df = pd.read_excel('chatBot/digitalgrow.xlsx')
 categorii = df['SERVICE']
 categorii_unice = list(dict.fromkeys(categorii.dropna().astype(str)))
 preferinte = {}

@@ -13,7 +13,7 @@ load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-df = pd.read_csv("digitalgrow.csv")
+df = pd.read_csv("chatBot/digitalgrow.csv")
 df.columns = df.columns.str.strip()
 
 content = ""
